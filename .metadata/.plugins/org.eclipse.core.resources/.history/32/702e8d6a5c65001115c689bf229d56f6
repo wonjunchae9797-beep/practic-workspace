@@ -1,0 +1,5 @@
+package com.kh.practice.anoboard.model.dao;
+
+public interface AnoBoardMapper {
+
+}

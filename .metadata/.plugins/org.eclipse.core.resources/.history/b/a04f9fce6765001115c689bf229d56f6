@@ -1,0 +1,13 @@
+package com.kh.practice.util.page;
+
+public class Pagination {
+	private int listCount;
+	private int currentPage;
+	private int boardLimit;
+	private int pageLimit;
+	private int maxPage;
+	private int startPage;
+	private int endPage;
+	
+
+}

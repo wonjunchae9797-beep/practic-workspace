@@ -1,0 +1,31 @@
+package com.kh.practice.anoboard.model.dao;
+
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface AnoBoardMapper {
+
+	@Insert("""
+				INSERT
+				  INTO
+				       ANO_BOARD
+				       (
+				       BOARD_NO
+				     , USER_NAME
+				     , USER_PWD
+				     , TITLE
+				     , CONTENT
+				     , FILE_URL
+				       )
+				VALUES
+				       (
+				       ABN_SEQ.NEXTVAL
+				     , #{userName}
+				     , #{userPwd}
+				     , #{title}
+				     , #{content}
+				     , #{fileUrl}
+				       )      
+			""")
+	
+}

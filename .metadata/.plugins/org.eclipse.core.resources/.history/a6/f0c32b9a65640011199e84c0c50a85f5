@@ -1,0 +1,7 @@
+package com.kh.practice.exception;
+
+public class DuplicatedIdException {
+	
+	
+
+}

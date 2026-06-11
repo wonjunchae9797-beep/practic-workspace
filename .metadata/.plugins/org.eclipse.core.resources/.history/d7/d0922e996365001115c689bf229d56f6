@@ -1,0 +1,5 @@
+package com.kh.practice.file.model.service;
+
+public interface FileService {
+
+}

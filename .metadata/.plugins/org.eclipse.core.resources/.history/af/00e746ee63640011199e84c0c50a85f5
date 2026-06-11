@@ -1,0 +1,13 @@
+package com.kh.practice.user.model.dao;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+
+import com.kh.practice.user.model.dto.UserDto;
+
+@Mapper
+public interface UserMapper {
+	@Insert("INSERT INTO PRAC_USER(USER_ID, USER_PWD, USER_NICKNAME) VALUES (#{userId}, #{userPwd}, #{userNickname})")
+	int save(UserDto user);
+
+}

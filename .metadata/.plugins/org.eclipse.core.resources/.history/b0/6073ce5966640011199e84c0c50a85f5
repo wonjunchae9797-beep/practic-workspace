@@ -1,0 +1,47 @@
+package com.kh.practice.api.model.vo;
+
+@Getter
+@AllArgsConstructor
+public class ApiResponse<T> {
+	
+
+	
+	
+		private int code;
+		private String message;
+		private  T data;
+
+		public static <T> ApiResponse<T> success(T data){
+			return new ApiResponse<>(200, "요청에 성공했습니다.", data);
+		}
+		public static <T> ApiResponse<T> success(String message, T data){
+			return new ApiResponse<>(200, message, data);
+		}
+		// 201 성공응답
+		public static <T> ApiResponse<T> created(T data){
+			return new ApiResponse<>(201, "요청에 성공했습니다", data);
+		}
+		public static <T> ApiResponse<T> created(String message, T data){
+			return new ApiResponse<>(201, message, data);
+		}
+		
+		// 204 성공 응답
+		public static <T> ApiResponse<T> noContent(T data){
+			return new ApiResponse<>(204, "요청에 성공했습니다.", data);
+		}
+		/*
+		 * static Factory pattern
+		 * 
+		 * 1.메소드의 이름으로 역할을 의미할 수 있음
+		 * 2.객체가 필요할 때 마다 새로 생성하는것이아니라 재활용 할 수 있음
+		 * 3.객체 생성을 한곳에서 통제 할 수 있음
+		 */
+		
+		
+		
+
+		
+	}
+
+
+}

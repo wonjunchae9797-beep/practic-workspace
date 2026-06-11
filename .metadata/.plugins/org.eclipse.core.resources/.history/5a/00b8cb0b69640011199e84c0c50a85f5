@@ -1,0 +1,29 @@
+package com.kh.practice.user.model.service;
+
+import org.springframework.stereotype.Service;
+
+import com.kh.practice.user.model.dao.UserMapper;
+import com.kh.practice.user.model.dto.UserDto;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+	private final UserMapper userMapper;
+	
+	
+	public void save(UserDto user) {
+		
+		checkId(user.getUserId());
+		
+		userMapper.save(user);
+	}
+	
+	private void checkId(String userId) {
+		
+	}
+	
+
+}

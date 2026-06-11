@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;practice/src/main/java/com/kh/practice/user/model/dto/USerDto.java&apos; to &apos;UserDto.java&apos;" description="Rename resource &apos;USerDto.java&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/java/com/kh/practice/user/model/dto/USerDto.java" name="UserDto.java" stamp="1780993682031" updateReferences="true"/>
+</session>

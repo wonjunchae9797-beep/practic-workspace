@@ -4,15 +4,19 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.practice.anoboard.model.dto.AnoBoardDto;
+import com.kh.practice.anoboard.model.dto.DeleteBoardDto;
 import com.kh.practice.anoboard.model.service.AnoBoardService;
 import com.kh.practice.api.model.vo.ApiResponse;
 
@@ -33,15 +37,37 @@ public class AnoBoardController {
 		anoBoardService.save(board, file);
 		return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created("작성성공!", null));
 	}
+	
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<AnoBoardDto>>> findAll(@RequestParam(name="page", defaultValue="1") int page){
 		List<AnoBoardDto> boards = anoBoardService.findAll(page);
 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(boards));
 	}
+	
  	@GetMapping("/{boardNo}")
 	public ResponseEntity<ApiResponse<AnoBoardDto>> findByBoardNo(@PathVariable(name="boardNo") Long boardNo){
  		AnoBoardDto board = anoBoardService.findByBoardNo(boardNo);
  		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(board));
- 		
  	}
+ 	
+ 	@PostMapping("/{boardNo}")
+ 	public ResponseEntity<ApiResponse<AnoBoardDto>> checkByPassword(@PathVariable(name="boardNo") Long boardNo, @RequestBody AnoBoardDto board) {
+ 		AnoBoardDto oriBoard = anoBoardService.checkByPassword(boardNo, board);
+ 		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success("비밀번호 일치", oriBoard));
+ 	}
+ 	
+ 	@PatchMapping("/{boardNo}")
+ 	public ResponseEntity<ApiResponse<Void>> updateBoard(@PathVariable(name="boardNo") Long boardNo, @Valid AnoBoardDto board, @RequestParam(name="file", required=false) MultipartFile file){
+ 		anoBoardService.updateBoard(boardNo, board, file);
+ 		return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created("게시글 수정 성공", null));
+ 	}
+ 	
+ 	@DeleteMapping("/{boardNo}")
+ 	public ResponseEntity<ApiResponse<Void>> deleteBoard(@PathVariable(name="boardNo") Long boardNo, @RequestBody AnoBoardDto board){
+ 		anoBoardService.deleteBoard(boardNo, board);
+ 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.noContent("게시글 삭제 성공", null));
+ 	}
+ 	
+ 	
+    
 }

@@ -21,7 +21,7 @@ public class AnoBoardDto {
 	@Size(min=2, max=20)
 	private String userName;
 	@NotBlank
-	@Size(min=4, max=20)
+	@Size(min=4)
 	private String userPwd;
 	@NotBlank
 	private String title;

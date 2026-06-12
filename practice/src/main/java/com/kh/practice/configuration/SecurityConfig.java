@@ -22,8 +22,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -40,9 +41,11 @@ public class SecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(Customizer.withDefaults())
 				.authorizeHttpRequests(requests->{
-					requests.requestMatchers(HttpMethod.POST, "/api/users","/api/auth/login", "/api/anoboards").permitAll();
+					requests.requestMatchers(HttpMethod.POST, "/api/users","/api/auth/login", "/api/anoboards/**").permitAll();
 					requests.requestMatchers(HttpMethod.PATCH,"/api/users","api/boards/**").authenticated();
+					requests.requestMatchers(HttpMethod.PATCH, "/api/anoboards/**").permitAll();
 					requests.requestMatchers(HttpMethod.DELETE, "/api/users","api/boards/**").authenticated();
+					requests.requestMatchers(HttpMethod.DELETE, "/api/anoboards/**").permitAll();
 					requests.requestMatchers(HttpMethod.POST,"/api/boards", "/api/comments").authenticated();
 					requests.requestMatchers(HttpMethod.GET,"/api/boards/**", "/api/anoboards/**").permitAll();
 				}).sessionManagement(manager ->

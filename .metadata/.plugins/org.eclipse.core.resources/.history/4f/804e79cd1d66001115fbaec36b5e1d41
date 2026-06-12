@@ -1,0 +1,124 @@
+package com.kh.practice.anoboard.model.service;
+
+import java.util.List;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.kh.practice.anoboard.model.dao.AnoBoardMapper;
+import com.kh.practice.anoboard.model.dto.AnoBoardDto;
+import com.kh.practice.anoboard.model.vo.AnoBoard;
+import com.kh.practice.exception.InvalidParameterException;
+import com.kh.practice.file.model.service.FileService;
+import com.kh.practice.util.page.PageInfo;
+import com.kh.practice.util.page.Pagination;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class AnoBoardService {
+
+	private final AnoBoardMapper anoBoardMapper;
+	private final PasswordEncoder passwordEncoder;
+	private final FileService fileService;
+	private final Pagination pagination;
+	
+	@Transactional
+	public void save(AnoBoardDto board, MultipartFile file) {
+		
+		AnoBoard b = AnoBoard.builder()
+							 .userName(board.getUserName())
+							 .userPwd(encodePassword(board.getUserPwd()))
+							 .title(board.getTitle())
+							 .content(board.getContent())
+							 .fileUrl(storeIfPresent(file))
+							 .build();
+		
+		// 파일 체크
+
+		// 비밀번호 인코딩 - 빌드쓰면서
+		
+		anoBoardMapper.save(b);
+		
+	}
+	
+	
+	
+	private String storeIfPresent(MultipartFile file) {
+		/*
+		if(file.isEmpty() || file == null) {
+			return null;
+		} 
+		return fileService.store(file);
+		*/
+		return ( file == null || file.isEmpty() ) ? null : fileService.store(file);	
+	}
+	
+    private String encodePassword(String rawPassword) {
+    	return passwordEncoder.encode(rawPassword);
+    }
+    @Transactional
+	public List<AnoBoardDto> findAll(int page) {
+		
+		if(page < 1) {
+			throw new InvalidParameterException ("잘못된 접근 입니다.");
+		} 
+		int totalCount = anoBoardMapper.countTotal();
+		PageInfo pi = pagination.getPageInfo(totalCount, page, 3, 5);
+		if((pi.getMaxPage() < pi.getCurrentPage())){
+			throw new InvalidParameterException ("잘못된 요청입니다. 이거 아님");  
+		}
+		return anoBoardMapper.findAll(pi);
+	}
+	@Transactional
+	public AnoBoardDto findByBoardNo(Long boardNo) {
+		
+		increaseCount(boardNo);
+		return anoBoardMapper.findByBoardNo(boardNo);
+	}
+	private void checkByBoardNo(Long boardNo) {
+		if(anoBoardMapper.checkByBoardNo(boardNo) < 1) {
+			throw new InvalidParameterException ("잘못된 요청입니다.");
+		}
+	}
+	
+	private void increaseCount(Long boardNo) {
+		checkByBoardNo(boardNo);
+		anoBoardMapper.increaseCount(boardNo);
+	}
+
+	@Transactional
+	public AnoBoardDto checkByPassword(AnoBoardDto board) {
+		AnoBoardDto oriBoard = findByBoardNo(board.getBoardNo());
+		if(!passwordEncoder.matches(board.getUserPwd(), oriBoard.getUserPwd())) {
+			throw new InvalidParameterException ("비밀번호가 일치하지 않습니다");
+		}
+		return oriBoard;
+	}
+
+	@Transactional
+	public void updateBoard(AnoBoardDto board, MultipartFile file) {
+		AnoBoardDto oriBoard = findByBoardNo(board.getBoardNo());
+		if(board.getUserPwd() != oriBoard.getUserPwd()) {
+			throw new InvalidParameterException ("비밀번호가 일치하지 않습니다");
+		}
+		AnoBoard b = AnoBoard.builder()
+							 .userName(board.getUserName())
+							 .userPwd(board.getUserPwd())
+							 .title(board.getTitle())
+							 .content(board.getContent())
+							 .fileUrl(storeIfPresent(board.getFileUrl()))
+				  			 .build();
+		int result = anoBoardMapper.updateBoard(b);
+		
+		
+		
+	}
+	
+	
+}

@@ -111,5 +111,34 @@ public interface AnoBoardMapper {
 				       BOARD_NO = #{boardNo}             
 			""")
 	int increaseCount(Long boardNo);
+
+	@Update("""
+				UPDATE
+				       ANO_BOARD
+				   SET
+				       TITLE = #{title}
+				     , CONTENT = #{content}
+				     , FILE_URL = #{fileUrl}
+				     , MODIFY_DATE = SYSDATE
+				 WHERE
+				       STATUS = 'Y'
+				   AND
+				       BOARD_NO = #{boardNo}              
+			""")
+	int updateBoard(AnoBoard board);
+
+	@Update("""
+				UPDATE
+				       ANO_BOARD
+				   SET
+				       STATUS = 'N'
+				 WHERE
+				       BOARD_NO = #{boardNo}
+				   AND
+				       STATUS = 'Y'              
+			""")
+	void deleteBoard(Long boardNo);
+	
 	
 }
+    

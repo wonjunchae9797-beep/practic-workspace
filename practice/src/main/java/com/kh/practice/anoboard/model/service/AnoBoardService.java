@@ -15,6 +15,7 @@ import com.kh.practice.file.model.service.FileService;
 import com.kh.practice.util.page.PageInfo;
 import com.kh.practice.util.page.Pagination;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +47,8 @@ public class AnoBoardService {
 		anoBoardMapper.save(b);
 		
 	}
+	
+	
 	
 	private String storeIfPresent(MultipartFile file) {
 		/*
@@ -89,4 +92,50 @@ public class AnoBoardService {
 		checkByBoardNo(boardNo);
 		anoBoardMapper.increaseCount(boardNo);
 	}
+
+	@Transactional
+	public AnoBoardDto checkByPassword(Long boardNo, AnoBoardDto board) {
+		AnoBoardDto oriBoard = findByBoardNo(boardNo);
+		if(!passwordEncoder.matches(board.getUserPwd(), oriBoard.getUserPwd())) {
+			throw new InvalidParameterException ("비밀번호가 일치하지 않습니다1");
+		}
+		return oriBoard;
+	}
+
+	@Transactional
+	public void updateBoard(Long boardNo, AnoBoardDto board, MultipartFile file) {
+		AnoBoardDto oriBoard = findByBoardNo(boardNo);
+		checkEncodePassword(board, oriBoard);
+		// System.out.print(board.getFileUrl());
+		AnoBoard b = AnoBoard.builder()
+							 .boardNo(boardNo)
+							 .userName(board.getUserName())
+							 .userPwd(board.getUserPwd())
+							 .title(board.getTitle())
+							 .content(board.getContent())
+							 .fileUrl((file == null || file.isEmpty()) ? oriBoard.getFileUrl() : storeIfPresent(file))
+				  			 .build();
+		int result = anoBoardMapper.updateBoard(b);
+		if(result < 1) {
+			throw new InvalidParameterException ("서버문제"); // exceptionClass 추가하기
+		}
+		
+	}
+
+	@Transactional
+	public void deleteBoard(Long boardNo, AnoBoardDto board) {
+		AnoBoardDto oriBoard = findByBoardNo(boardNo);
+		log.info("이건 보드 : {}, 이건 오리보드 : {}", board, oriBoard);
+//		System.out.print(board.getUserPwd());
+//		System.out.print(oriBoard.getUserPwd());
+		checkEncodePassword(board, oriBoard);
+		anoBoardMapper.deleteBoard(boardNo);
+	}
+	
+	private void checkEncodePassword(AnoBoardDto board, AnoBoardDto oriBoard) {
+		if(!((oriBoard.getUserPwd()).equals(board.getUserPwd()))) {
+			throw new InvalidParameterException ("비밀번호가 일치하지 않습니다2");
+		}
+	}
+	
 }

@@ -8,7 +8,7 @@ import com.kh.practice.user.model.vo.User;
 
 @Mapper
 public interface UserMapper {
-	@Insert("INSERT INTO PRAC_USER(USER_ID, USER_PWD, USER_NICKNAME) VALUES (#{userId}, #{userPwd}, #{userNickname})")
+	@Insert("INSERT INTO PRAC_USER(USER_ID, USER_PWD, USER_NAME) VALUES (#{userId}, #{userPwd}, #{userName})")
 	int save(User userEntity);
 	
 	@Select("SELECT COUNT(*) FROM PRAC_USER WHERE USER_ID = #{userId}")

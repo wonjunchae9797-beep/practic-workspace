@@ -1,0 +1,43 @@
+package com.kh.practice.auth.model.service;
+
+import java.util.Collections;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.kh.practice.auth.model.dao.AuthMapper;
+import com.kh.practice.auth.model.vo.CustomUserDetails;
+import com.kh.practice.user.model.dto.UserDto;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class UserDetailService implements UserDetailsService{
+
+	private final AuthMapper authMapper;
+	
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		
+		UserDto user = authMapper.loadUser(username);
+		
+		if(user == null) {
+			throw new UsernameNotFoundException("유저 못찾음");
+		}
+		
+		return CustomUserDetails.builder().username(user.getUserId())
+										  .password(user.getUserPwd())
+										  .userName(user.getUserNickname())
+										  .authorities(Collections.singletonList(new SimpleGrantedAuthority(user.getRole())))
+										  .status(user.getStatus())
+										  .build();
+		
+	}
+
+}

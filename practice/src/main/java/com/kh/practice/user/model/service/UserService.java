@@ -23,7 +23,7 @@ public class UserService {
 		
 		User userEntity = User.builder().userId(user.getUserId())
 										.userPwd(encodePassword(user.getUserPwd()))
-										.userNickname(user.getUserNickname())
+										.userName(user.getUserName())
 										.build();
 		
 		userMapper.save(userEntity);

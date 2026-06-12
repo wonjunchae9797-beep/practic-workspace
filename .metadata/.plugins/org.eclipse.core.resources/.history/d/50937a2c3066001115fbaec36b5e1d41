@@ -1,0 +1,15 @@
+package com.kh.practice.auth.model.service;
+
+import com.kh.practice.auth.model.dto.LoginRequestDto;
+
+import jakarta.validation.Valid;
+
+public class AuthService {
+
+	public void login(LoginRequestDto lrd) {
+		
+		
+		
+	}
+
+}

@@ -1,0 +1,13 @@
+package com.kh.practice.token.model.dao;
+
+import com.kh.practice.token.model.vo.RefreshToken;
+
+public interface TokenMapper {
+
+	void saveToken(RefreshToken refreshToken);
+
+	void deleteToken(String memberId);
+
+	RefreshToken findByToken(String refreshToken);
+
+}

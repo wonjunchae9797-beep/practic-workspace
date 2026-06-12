@@ -27,7 +27,7 @@ public class UserDto {
 	private String userPwd;
 	@NotBlank
 	@Size(min = 2, max=20)
-	private String userNickname;
+	private String userName;
 	private Date enrollDate;
 	private Date modifyDate;
 	private String role;

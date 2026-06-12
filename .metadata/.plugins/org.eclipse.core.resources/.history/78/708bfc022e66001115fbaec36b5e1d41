@@ -1,0 +1,5 @@
+package com.kh.practice.admin.model.vo;
+
+public class CustomUserDetails {
+
+}

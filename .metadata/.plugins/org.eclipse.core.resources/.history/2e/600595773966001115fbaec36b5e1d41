@@ -1,0 +1,25 @@
+package com.kh.practice.auth.model.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+public class LoginResponseDto {
+
+	@Getter
+	@Setter
+	@AllArgsConstructor
+	@ToString
+	@Builder
+	public class LoginResponseDto {
+		private String memberId;
+		private String memberName;
+		private String role;
+		private String accessToken;
+		private String refreshToken;
+
+	}
+	
+}
